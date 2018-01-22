@@ -82,7 +82,7 @@ end
 #map(x -> tuple(x...) ,[[0, 1], [0, 4], [1, 2], [1, 4], [1, 5], [2, 3], [2, 5], [2, 6], [3, 6], [3, 7], [4, 5], [4, 8], [5, 6], [5, 8], [5, 9], [6, 7], [6, 9], [6, 10], [7, 10], [7, 11], [8, 9], [8, 12], [9, 10], [9, 12], [9, 13], [10, 11], [10, 13], [10, 14], [11, 14], [11, 15], [12, 13], [13, 14], [14, 15]])
 
 # Transformation to triangles by sorting circularly the vertices of faces
-function quads2tria(model)
+function quads2tria(model)												# PROBLEM!!!
 	counter = 0			# REMOVE
 	V, FV = model
 	out = Array{Int64,1}[]
