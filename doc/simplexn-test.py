@@ -113,6 +113,8 @@ if __name__ == "__main__":
    print "\nSK2:\n",SK2
    #VIEW(EXPLODE(1.5,1.5,1.5)(MKPOLS(SK2)))
    SK1 = (V,larSimplexFacets(SK2[1]))
+   #arrtuple = [[0, 1, 2], [0, 1, 4], [0, 2, 4], [1, 2, 3], [1, 2, 4], [1, 2, 5], [1, 3, 5], [1, 4, 5], [2, 3, 5], [2, 3, 6], [2, 4, 5], [2, 4, 6], [2, 5, 6], [3, 5, 6], [3, 5, 7], [3, 6, 7], [4, 5, 6], [5, 6, 7]]
+   #SK1 = (V,larSimplexFacets(arrtuple))
    print "\nSK1:\n",SK1
    #VIEW(EXPLODE(1.5,1.5,1.5)(MKPOLS(SK1)))
 
