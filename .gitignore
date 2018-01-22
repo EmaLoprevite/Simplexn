@@ -5,4 +5,4 @@ deps/deps.jl
 
 .DS_Store
 Butta*
-.*
+.ipynb_*
