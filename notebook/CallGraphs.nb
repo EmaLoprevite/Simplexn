@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16366,        374]
-NotebookOptionsPosition[     15452,        353]
-NotebookOutlinePosition[     15841,        370]
-CellTagsIndexPosition[     15798,        367]
+NotebookDataLength[     16909,        387]
+NotebookOptionsPosition[     15996,        366]
+NotebookOutlinePosition[     16385,        383]
+CellTagsIndexPosition[     16342,        380]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -200,13 +200,20 @@ cbdd55e56f0b"],
 Cell[BoxData[
  RowBox[{
   RowBox[{"Export", "[", 
+   RowBox[{"\"\<Graph1.png\>\"", ",", "graph1", ",", "\"\<PNG\>\""}], "]"}], 
+  ";", 
+  RowBox[{"(*", " ", 
    RowBox[{
-   "\"\</Users/emanuele/Documents/Universita\:0300/IN480/Graph1.png\>\"", ",",
-     "graph1", ",", "\"\<PNG\>\""}], "]"}], ";"}]], "Input",
+    RowBox[{"Export", " ", "in", " ", "the", " ", "home", " ", "directory"}], 
+    ",", " ", 
+    RowBox[{"otherwise", " ", "\"\</full/path/Graph1.png\>\""}]}], " ", 
+   "*)"}]}]], "Input",
  CellChangeTimes->{{3.719578388370983*^9, 3.719578394501609*^9}, 
    3.7195784334990253`*^9, 3.725271827889859*^9, {3.725271858379326*^9, 
    3.7252718596340647`*^9}, {3.725341434581224*^9, 3.7253414353707857`*^9}, {
-   3.725341825309482*^9, 3.725341827150704*^9}},
+   3.725341825309482*^9, 3.725341827150704*^9}, {3.725611641574349*^9, 
+   3.7256116599515333`*^9}, 3.725611698722394*^9, {3.7256117399862833`*^9, 
+   3.7256118082919693`*^9}},
  NumberMarks->False,ExpressionUUID->"a146d962-068f-4ed3-b440-877667a49bb3"],
 
 Cell[BoxData[{
@@ -339,16 +346,22 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   RowBox[{"Export", "[", 
+   RowBox[{"\"\<Graph2.png\>\"", ",", "graph2", ",", "\"\<PNG\>\""}], "]"}], 
+  ";", 
+  RowBox[{"(*", " ", 
    RowBox[{
-   "\"\</Users/emanuele/Documents/Universita\:0300/IN480/Graph2.png\>\"", ",",
-     "graph2", ",", "\"\<PNG\>\""}], "]"}], ";"}]], "Input",
+    RowBox[{"Export", " ", "in", " ", "the", " ", "home", " ", "directory"}], 
+    ",", " ", 
+    RowBox[{"otherwise", " ", "\"\</full/path/Graph2.png\>\""}]}], " ", 
+   "*)"}]}]], "Input",
  CellChangeTimes->{{3.719574372484974*^9, 3.719574374803875*^9}, {
    3.719574627018632*^9, 3.719574628177724*^9}, {3.719578442004427*^9, 
    3.719578448019629*^9}, {3.725271835028219*^9, 3.72527186348046*^9}, {
    3.725341440562566*^9, 3.725341464291358*^9}, 3.725341582706949*^9, {
    3.725341628803087*^9, 3.725341649093546*^9}, {3.7253417443385553`*^9, 
-   3.725341763006068*^9}, {3.725341835178303*^9, 
-   3.7253418384520206`*^9}},ExpressionUUID->"0e2b486e-e864-4c71-bc24-\
+   3.725341763006068*^9}, {3.725341835178303*^9, 3.7253418384520206`*^9}, {
+   3.7256116689667673`*^9, 3.725611703338708*^9}, {3.7256118257588053`*^9, 
+   3.725611836749874*^9}},ExpressionUUID->"0e2b486e-e864-4c71-bc24-\
 3a25ce655775"]
 },
 WindowSize->{1680, 1002},
@@ -372,10 +385,10 @@ Notebook[{
 Cell[558, 20, 452, 11, 46, "Input",ExpressionUUID->"3026e005-e511-4fdf-a3de-e546958601e7"],
 Cell[1013, 33, 2058, 53, 233, "Input",ExpressionUUID->"e1e6385d-5a70-402b-b068-bd007cf38a9c"],
 Cell[3074, 88, 5869, 109, 140, "Input",ExpressionUUID->"7cd364aa-0b5a-404e-af27-cbdd55e56f0b"],
-Cell[8946, 199, 543, 10, 46, "Input",ExpressionUUID->"a146d962-068f-4ed3-b440-877667a49bb3"],
-Cell[9492, 211, 1892, 50, 233, "Input",ExpressionUUID->"6531f1c0-cb98-4b34-b35e-1f9ab4249532"],
-Cell[11387, 263, 3363, 73, 140, "Input",ExpressionUUID->"64c784e5-2ba3-455e-a07a-37a8dc90b3f6"],
-Cell[14753, 338, 695, 13, 104, "Input",ExpressionUUID->"0e2b486e-e864-4c71-bc24-3a25ce655775"]
+Cell[8946, 199, 829, 17, 46, "Input",ExpressionUUID->"a146d962-068f-4ed3-b440-877667a49bb3"],
+Cell[9778, 218, 1892, 50, 233, "Input",ExpressionUUID->"6531f1c0-cb98-4b34-b35e-1f9ab4249532"],
+Cell[11673, 270, 3363, 73, 140, "Input",ExpressionUUID->"64c784e5-2ba3-455e-a07a-37a8dc90b3f6"],
+Cell[15039, 345, 953, 19, 46, "Input",ExpressionUUID->"0e2b486e-e864-4c71-bc24-3a25ce655775"]
 }
 ]
 *)

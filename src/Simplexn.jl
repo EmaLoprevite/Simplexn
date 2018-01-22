@@ -119,13 +119,13 @@ function quads2tria(model)
 		tcentroid = sum(verts)/length(verts)
 		println("tcentroid\n",tcentroid)
 		println(typeof(tcentroid))
-		tverts = [v-tcentroid for v in verts]							# PROBLEM...
+		tverts = [v-tcentroid for v in verts]							# PROBLEM FROM HERE...
 		println("tverts\n",tverts)
 		iterator = collect(zip(tverts, face))
 		println("iterator\n",iterator)
 		rverts = [ [atan2(reverse(iterator[i][1])...), iterator[i][2]] for i in 1:length(iterator) ]
 		println("rverts\n",rverts)
-		rvertss = sort(rverts, lt=(x,y)->isless(x[1],y[1]))
+		rvertss = sort(rverts, lt=(x,y)->isless(x[1],y[1]))				# ... TO HERE!!!
 		println("rvertss\n",rvertss)
 		ord = [pair[2] for pair in rvertss]
 		println("ord 1\n",ord)
