@@ -33,7 +33,7 @@ modelPy = ([[0, 0, 0], [1, 0, 0], [2, 0, 0], [0, 1, 0], [1, 1, 0], [2, 1, 0], [0
 @test model == modelPy
 #LARVIEW.viewexploded()
 #VIEW(EXPLODE(1,1,1.2)(MKPOLS(model)))
-#p.VIEW(p.EXPLODE(1,1,1.2)(p.MKPOLS(PyObject(model))))								# SOMETHING WRONG!!!
+#p.VIEW(p.EXPLODE(1,1,1.2)(p.MKPOLS(PyObject([model[1],model[2]]))))				# SOMETHING WRONG!!!
 #p.VIEW(p.EXPLODE(1,1,1.2)(p.MKPOLS(model)))										# SOMETHING WRONG!!!
 end
 
