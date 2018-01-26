@@ -9,57 +9,31 @@ using Combinatorics			# for the function combinations()
 
 VOID = V0,CV0 = [Int64[]],[[0]]			# the empty simplicial model
 
-#=
-function cumsum(arr)
-	https://docs.julialang.org/en/stable/manual/interfaces/#man-interface-iteration-1
-end
-=#
-
 function larExtrude1(model, pattern)
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
-	#println("\nd, m: ",d,"     ",m)
 	coords = cumsum(append!([0],abs.(pattern)))			# built-in function cumsum
-	#println("\ncoords:",coords,"\n",typeof(coords),"\n")
-	offset, outcells, rangelimit = length(V), [], d*m
-	j = 1
+	offset, outcells, rangelimit = length(V), Int64[], d*m
+	outcells = Array{Int64}(m,0)
 	for cell in FV
 		tube = [v + k*offset for k in 0:m for v in cell]
-		#println("\ntube:\n",tube,"\n",typeof(tube),"\n")
 		celltube = Int64[]
-		#println("\ncelltube:\n",celltube,"\n",typeof(celltube),"\n")
 		for k in 1:rangelimit
-			celltube = vcat(celltube,tube[k:k+d])												# IMPROVE!!!
+			append!(celltube,tube[k:k+d])
 		end
-		#println("\ncelltube:\n",celltube,"\n",size(celltube),"\n",typeof(celltube))
-		
-		if j == 1			# removed reshape().tolist()										# IMPROVE!!!
-			#outcells=permutedims(reshape(celltube,12,div(144,12)),[2,1])
-			outcells=permutedims(reshape(celltube,d*(d+1),m),[2,1])
-			#println("\noutcell:\n",outcells,"\n",size(outcells),"\n",typeof(outcells),"\n")
-		else
-			outcells=hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))
-			#println("\noutcell:\n",outcells,"\n",size(outcells),"\n",typeof(outcells),"\n")
-		end
-		j+=1
+		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))
 	end
-	#println("\n\n\n")
 	cellGroups = Int64[]
-	#println("righe:",size(outcells)[1])
-	for k in 1:size(outcells)[1]
+	for k in 1:m
 		if pattern[k]>0
 			cellGroups=vcat(cellGroups,outcells[k,:])
 		end
 	end
-	#println("\ncellGroupes:\n",cellGroups)
 	outVertices = [vcat(v,z) for z in coords for v in V]
-	#println("\noutVertices\n",outVertices)
 	outCellGroups = Array{Int64,1}[]
-	#println("\ntipo di outcellgroups:",typeof(outCellGroups))
 	for k in 1:d+1:length(cellGroups)
-			outCellGroups = vcat(outCellGroups,[cellGroups[k:k+d]])								# IMPROVE!!!
+		append!(outCellGroups,[cellGroups[k:k+d]])
 	end
-	#println("\noutCellGroups:\n",outCellGroups)
 	return outVertices, outCellGroups
 end
 
@@ -79,7 +53,7 @@ function larSimplexFacets(simplices)			# Return array of arrays and not array of
     end
 	return sort!(unique(out), lt=lexless)
 end
-#map(x -> tuple(x...) ,[[0, 1], [0, 4], [1, 2], [1, 4], [1, 5], [2, 3], [2, 5], [2, 6], [3, 6], [3, 7], [4, 5], [4, 8], [5, 6], [5, 8], [5, 9], [6, 7], [6, 9], [6, 10], [7, 10], [7, 11], [8, 9], [8, 12], [9, 10], [9, 12], [9, 13], [10, 11], [10, 13], [10, 14], [11, 14], [11, 15], [12, 13], [13, 14], [14, 15]])
+#map(x -> tuple(x...) ,[[0, 1], [0, 4], [1, 2]])
 
 # Transformation to triangles by sorting circularly the vertices of faces
 function quads2tria(model)												# PROBLEM!!!
