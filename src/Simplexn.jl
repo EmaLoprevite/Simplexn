@@ -6,7 +6,6 @@
 
 using Combinatorics		# for the function combinations()
 
-
 VOID = V0,CV0 = [Int64[]],[[0]]		# the empty simplicial model
 
 #
