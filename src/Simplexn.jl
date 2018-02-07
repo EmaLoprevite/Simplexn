@@ -57,7 +57,7 @@ end
 #map(x -> tuple(x...) ,[[0, 1], [0, 4], [1, 2]])
 
 # Transformation to triangles by sorting circularly the vertices of faces
-function quads2tria(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}})
+function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})
 	V, FV = model
 	out = Array{Int64,1}[]
 	nverts = length(V)-1
