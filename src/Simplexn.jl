@@ -8,7 +8,7 @@ using Combinatorics		# for the function combinations()
 
 VOID = V0,CV0 = [Int64[]],[[0]]		# the empty simplicial model
 
-#
+# Generation of the output model vertices in a multiple extrusion of a LAR model
 function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
@@ -36,7 +36,7 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	return outVertices, outCellGroups
 end
 
-#
+# Generation of simplicial grids of any dimension and shape
 function larSimplexGrid1(shape::Array{Int64,1})
 	model = VOID
 	for item in shape
@@ -45,8 +45,8 @@ function larSimplexGrid1(shape::Array{Int64,1})
 	return model
 end
 
-#
-function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# Return array of arrays and not array of tuples
+# Extraction of non-oriented (d−1)-facets of d-dimensional simplices
+function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of arrays and not array of tuples
 	out = Array{Int64,1}[]
     d = length(simplices[1])
     for simplex in simplices
