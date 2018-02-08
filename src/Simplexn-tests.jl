@@ -4,8 +4,8 @@
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-include("Simplexn-serial.jl")
-	
+include("Simplexn.jl")
+
 using Base.Test
 #using LARVIEW
 
