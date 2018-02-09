@@ -37,9 +37,9 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 end
 
 # Generation of simplicial grids of any dimension and shape
-function larSimplexGrid1(shape::Array{Int64,1})						# NO PARALLELING
+function larSimplexGrid1(shape::Array{Int64,1})
 	model = VOID
-	for item in shape
+	for item in shape											# NO PARALLELING(?)
 		model = larExtrude1(model, repmat([1],item))
 	end
 	return model
@@ -49,7 +49,7 @@ end
 function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of arrays and not array of tuples
 	out = Array{Int64,1}[]
     d = length(simplices[1])
-    out = @parallel (append!) for simplex in simplices
+    out = @parallel (append!) for simplex in simplices		# WTF, IT TAKES LONGER...
     		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics
     	end
 	return sort!(unique(out), lt=lexless)
