@@ -4,7 +4,7 @@
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-using Combinatorics		# for the function combinations()
+@everywhere using Combinatorics		# for the function combinations()
 
 VOID = V0,CV0 = [Int64[]],[[0]]		# the empty simplicial model
 
@@ -37,7 +37,7 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 end
 
 # Generation of simplicial grids of any dimension and shape
-function larSimplexGrid1(shape::Array{Int64,1})			# NO PARALLELING
+function larSimplexGrid1(shape::Array{Int64,1})						# NO PARALLELING
 	model = VOID
 	for item in shape
 		model = larExtrude1(model, repmat([1],item))
@@ -49,12 +49,12 @@ end
 function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of arrays and not array of tuples
 	out = Array{Int64,1}[]
     d = length(simplices[1])
-    @parallel for simplex in simplices
-    	append!(out,collect(combinations(simplex,d-1)))		# combinations() needs pkg Combinatorics
-    end
+    out = @parallel (append!) for simplex in simplices
+    		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics
+    	end
 	return sort!(unique(out), lt=lexless)
 end
-#map(x -> tuple(x...) ,[[0, 1], [0, 4], [1, 2]])
+#map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])
 
 # Transformation to triangles by sorting circularly the vertices of faces
 function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})
