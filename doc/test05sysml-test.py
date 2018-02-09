@@ -38,6 +38,6 @@ B_Rep = V,boundaryFaces
 print "\nB_Rep:\n", B_Rep
 verts, triangles = quads2tria(B_Rep)
 print "\nverts:\n", verts, "\ntriangles:\n", triangles
-B_Rep = V,boundaryFaces
+#B_Rep = V,boundaryFaces
 VIEW(EXPLODE(1.1,1.1,1.1)(MKPOLS((verts, triangles))))
 VIEW(STRUCT(MKPOLS((verts, triangles))))

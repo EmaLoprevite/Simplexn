@@ -4,7 +4,7 @@
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-include("Simplexn.jl")
+include("../src/Simplexn.jl")
 
 using Base.Test
 #using LARVIEW
