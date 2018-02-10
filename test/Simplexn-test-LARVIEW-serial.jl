@@ -139,8 +139,8 @@ using PyCall
 		@test Set(triangles) == Set(trianglesPy)
 		LARVIEW.viewexploded(hcat(verts...),triangles+1)
 		
-		# LARVIEW.view() doesn't work, the following two work the same; different "colours"(?) from Python!
-		p.VIEW(LARVIEW.lar2hpc(Array{Float64,2}(hcat(verts...)),triangles+1))
+		# LARVIEW.view() doesn't work, different "colours"(?) from Python!
+		#p.VIEW(LARVIEW.lar2hpc(Array{Float64,2}(hcat(verts...)),triangles+1))			???
 		p.VIEW(LARVIEW.lar2hpc(hcat(verts...),triangles+1))
 	end
 	
