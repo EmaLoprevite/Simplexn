@@ -25,7 +25,7 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	cellGroups = Int64[]
 	for k in 1:m
 		if pattern[k]>0
-			cellGroups=vcat(cellGroups,outcells[k,:])
+			cellGroups = vcat(cellGroups,outcells[k,:])
 		end
 	end
 	outVertices = [vcat(v,z) for z in coords for v in V]
@@ -40,7 +40,7 @@ end
 function larSimplexGrid1(shape::Array{Int64,1})
 	model = VOID
 	for item in shape
-		model = larExtrude1(model, repmat([1],item))
+		model = larExtrude1(model,repmat([1],item))
 	end
 	return model
 end
@@ -52,7 +52,7 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of
     for simplex in simplices
     	append!(out,collect(combinations(simplex,d-1)))		# combinations() needs pkg Combinatorics
     end
-	return sort!(unique(out), lt=lexless)
+	return sort!(unique(out),lt=lexless)
 end
 #map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])
 
@@ -77,12 +77,12 @@ function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},
 		tcentroid = sum(verts)/length(verts)
 		tverts = [v-tcentroid for v in verts]
 		iterator = collect(zip(tverts, face))
-		rverts = [ [atan2(reverse(iterator[i][1])...), iterator[i][2]] for i in 1:length(iterator) ]
-		rvertss = sort(rverts, lt=(x,y)->isless(x[1],y[1]))
+		rverts = [[atan2(reverse(iterator[i][1])...),iterator[i][2]] for i in 1:length(iterator)]
+		rvertss = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
 		ord = [pair[2] for pair in rvertss]
 		append!(ord,ord[1])
-		edges = [ [i[2], ord[i[1]+1]] for i in enumerate(ord[1:end-1]) ]
-		triangles = [ prepend!(edge,nverts) for edge in edges ]
+		edges = [[i[2],ord[i[1]+1]] for i in enumerate(ord[1:end-1])]
+		triangles = [prepend!(edge,nverts) for edge in edges]
 		append!(out,triangles)
 	end
 	return V, out
