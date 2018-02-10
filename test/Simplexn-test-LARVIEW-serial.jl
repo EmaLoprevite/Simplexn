@@ -9,6 +9,9 @@ include("../src/Simplexn-serial.jl")
 using Base.Test
 using LARVIEW
 
+using PyCall
+@pyimport larlib as p
+
 @testset "Global tests" begin
 	
 	@testset "Simplexn Examples" begin
@@ -135,7 +138,10 @@ using LARVIEW
 		#@test triangles == trianglesPy						# fail but actually the problem is just the order
 		@test Set(triangles) == Set(trianglesPy)
 		LARVIEW.viewexploded(hcat(verts...),triangles+1)
-		#VIEW(STRUCT(MKPOLS((verts, triangles))))			# ???
+		
+		# LARVIEW.view() doesn't work, the following two work the same; different "colours"(?) from Python!
+		p.VIEW(LARVIEW.lar2hpc(Array{Float64,2}(hcat(verts...)),triangles+1))
+		p.VIEW(LARVIEW.lar2hpc(hcat(verts...),triangles+1))
 	end
 	
 end
