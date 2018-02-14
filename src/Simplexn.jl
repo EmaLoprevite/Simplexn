@@ -16,26 +16,38 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	coords = cumsum(append!([0],abs.(pattern)))			# built-in function cumsum
 	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
 	#offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,0), d*m
+	#@sync @parallel 
 	for cell in FV
 		tube = [v + k*offset for k in 0:m for v in cell]
 		celltube = Int64[]
-		for k in 1:rangelimit
-			append!(celltube,tube[k:k+d])
+		#for k in 1:rangelimit
+		#	append!(celltube,tube[k:k+d])
+		#end
+		celltube = @parallel (append!) for k in 1:rangelimit
+			tube[k:k+d]
 		end
 		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))
 	end
 	cellGroups = Int64[]
 	#cellGroups = SharedArray{Int64}(0)
-	#@parallel
 	for k in 1:m
 		if pattern[k]>0
 			cellGroups = vcat(cellGroups,outcells[k,:])
 		end
 	end
+	#cellGroups = @parallel (vcat) for k in 1:m
+	#	if pattern[k]>0
+	#		outcells[k,:]
+	#	end
+	#end
+	#println("\ncellgroup:\n",cellGroups,"\ntype: ",typeof(cellGroups))
 	outVertices = [vcat(v,z) for z in coords for v in V]
 	outCellGroups = Array{Int64,1}[]
-	@sync for k in 1:d+1:length(cellGroups)
-		append!(outCellGroups,[cellGroups[k:k+d]])
+	#for k in 1:d+1:length(cellGroups)
+	#	append!(outCellGroups,[cellGroups[k:k+d]])
+	#end
+	outCellGroups = @parallel (append!) for k in 1:d+1:length(cellGroups)
+			[cellGroups[k:k+d]]
 	end
 	return outVertices, outCellGroups
 end
@@ -57,7 +69,7 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of
     out = @parallel (append!) for simplex in simplices			# WTF, IT TAKES LONGER...!!!
     		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics everywhere
     	end
-    #@parallel for simplex in simplices
+    #for simplex in simplices
     #	append!(out,collect(combinations(simplex,d-1)))
     #end
 	return sort!(unique(out),lt=lexless)
@@ -67,8 +79,10 @@ end
 # Transformation to triangles by sorting circularly the vertices of faces
 function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})
 	V, FV = model
+	#@everywhere out = Array{Int64,1}[]
 	out = Array{Int64,1}[]
 	nverts = length(V)-1
+	#@parallel
 	for face in FV
 		arr = [V[v+1] for v in face]
 		centroid = sum(arr)/length(arr)
