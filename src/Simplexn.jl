@@ -14,19 +14,19 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	d, m = length(FV[1]), length(pattern)
 	#@everywhere d, m = length(FV[1]), length(pattern)
 	coords = cumsum(append!([0],abs.(pattern)))			# built-in function cumsum
+	outVertices = @spawn [vcat(v,z) for z in coords for v in V]
 	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
 	#offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,0), d*m
-	#@sync @parallel 
 	for cell in FV
 		tube = [v + k*offset for k in 0:m for v in cell]
 		celltube = Int64[]
-		#for k in 1:rangelimit
+		#@sync @parallel for k in 1:rangelimit
 		#	append!(celltube,tube[k:k+d])
 		#end
-		celltube = @parallel (append!) for k in 1:rangelimit
+		celltube = @sync @parallel (append!) for k in 1:rangelimit
 			tube[k:k+d]
 		end
-		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))
+		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))	# PARALLELING?
 	end
 	cellGroups = Int64[]
 	#cellGroups = SharedArray{Int64}(0)
@@ -35,13 +35,13 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 			cellGroups = vcat(cellGroups,outcells[k,:])
 		end
 	end
-	#cellGroups = @parallel (vcat) for k in 1:m
+	#cellGroups = @sync @parallel (vcat) for k in 1:m
 	#	if pattern[k]>0
 	#		outcells[k,:]
 	#	end
 	#end
 	#println("\ncellgroup:\n",cellGroups,"\ntype: ",typeof(cellGroups))
-	outVertices = [vcat(v,z) for z in coords for v in V]
+	#outVertices = [vcat(v,z) for z in coords for v in V]
 	outCellGroups = Array{Int64,1}[]
 	#for k in 1:d+1:length(cellGroups)
 	#	append!(outCellGroups,[cellGroups[k:k+d]])
@@ -49,7 +49,7 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	outCellGroups = @parallel (append!) for k in 1:d+1:length(cellGroups)
 			[cellGroups[k:k+d]]
 	end
-	return outVertices, outCellGroups
+	return fetch(outVertices), outCellGroups
 end
 
 # Generation of simplicial grids of any dimension and shape
