@@ -70,7 +70,8 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of
     out = @parallel (append!) for simplex in simplices			# WTF, IT TAKES LONGER...!!!
     		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics everywhere
     		
-    		repmat(rand(10000),length(simplex))
+    		println("parto")
+    		repmat(rand(10000),length(simplex));
     		
     	end
     toc()
