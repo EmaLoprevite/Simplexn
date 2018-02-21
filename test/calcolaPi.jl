@@ -14,7 +14,7 @@
     return n_nel_cerchio / N * 4.0    
 end
 
-function calcolo_parallelo_pi(N::Int; ncores::Int=4) 
+function calcolo_parallelo_pi(N::Int; ncores::Int=8) 
     
       # compute sum of pi's estimated among all cores in parallel
 somma_delle_pi = @parallel (+) for i=1:ncores calcola_pi(ceil(Int, N / ncores))
@@ -23,4 +23,4 @@ end
 end
 
 
-@timev calcolo_parallelo_pi(40000000000,8)
+@timev calcolo_parallelo_pi(40000000000)
