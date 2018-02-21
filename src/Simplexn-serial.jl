@@ -49,9 +49,11 @@ end
 function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of arrays and not array of tuples
 	out = Array{Int64,1}[]
     d = length(simplices[1])
+    tic()
     for simplex in simplices
     	append!(out,collect(combinations(simplex,d-1)))		# combinations() needs pkg Combinatorics
     end
+    toc()
 	return sort!(unique(out),lt=lexless)
 end
 #map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])

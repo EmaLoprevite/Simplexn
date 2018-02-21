@@ -66,9 +66,11 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of
 	#@everywhere out = Array{Int64,1}[]
 	out = Array{Int64,1}[]
     d = length(simplices[1])
+    tic()
     out = @parallel (append!) for simplex in simplices			# WTF, IT TAKES LONGER...!!!
     		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics everywhere
     	end
+    toc()
     #for simplex in simplices
     #	append!(out,collect(combinations(simplex,d-1)))
     #end
