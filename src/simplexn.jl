@@ -14,6 +14,7 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	d, m = length(FV[1]), length(pattern)
 	#@everywhere d, m = length(FV[1]), length(pattern)
 	coords = cumsum(append!([0],abs.(pattern)))			# built-in function cumsum
+	println("spawn")
 	outVertices = @spawn [vcat(v,z) for z in coords for v in V]
 	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
 	#offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,0), d*m
@@ -23,9 +24,11 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 		#@sync @parallel for k in 1:rangelimit
 		#	append!(celltube,tube[k:k+d])
 		#end
+		println("sync parallel")
 		celltube = @sync @parallel (append!) for k in 1:rangelimit
 			tube[k:k+d]
 		end
+		println("end sync parallel")
 		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))	# PARALLELING?
 	end
 	cellGroups = Int64[]
@@ -46,9 +49,12 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	#for k in 1:d+1:length(cellGroups)
 	#	append!(outCellGroups,[cellGroups[k:k+d]])
 	#end
+	println("parallel 2")
 	outCellGroups = @parallel (append!) for k in 1:d+1:length(cellGroups)
 			[cellGroups[k:k+d]]
 	end
+	println("end parallel 2")
+	println("return")
 	return fetch(outVertices), outCellGroups
 end
 
@@ -66,13 +72,13 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of
 	#@everywhere out = Array{Int64,1}[]
 	out = Array{Int64,1}[]
     d = length(simplices[1])
-    println("parallel")
+    println("parallel 1")
     tic()
     out = @parallel (append!) for simplex in simplices			# WTF, IT TAKES LONGER...!!!
     		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics everywhere
     	end
     toc()
-    println("fine")
+    println("fine parallel 1")
     #for simplex in simplices
     #	append!(out,collect(combinations(simplex,d-1)))
     #end
