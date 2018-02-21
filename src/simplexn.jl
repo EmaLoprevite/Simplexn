@@ -71,7 +71,6 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of
     		collect(combinations(simplex,d-1))		# combinations() needs pkg Combinatorics everywhere
     		
     		println("parto")
-    		repmat(rand(10000),length(simplex));
     		
     	end
     toc()
