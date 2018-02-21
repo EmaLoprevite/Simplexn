@@ -23,4 +23,4 @@ end
 end
 
 
-@timev calcolo_parallelo_pi(40000000000)
+@timev calcolo_parallelo_pi(40000000000,8)
