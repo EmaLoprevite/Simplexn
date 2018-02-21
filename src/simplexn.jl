@@ -25,7 +25,7 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 		#	append!(celltube,tube[k:k+d])
 		#end
 		println("sync parallel")
-		celltube = @parallel (append!) for k in 1:rangelimit
+		celltube = @async @parallel (append!) for k in 1:rangelimit
 			tube[k:k+d]
 		end
 		println("end sync parallel")
