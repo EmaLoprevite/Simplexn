@@ -7,7 +7,7 @@
 include("../src/simplexn-serial.jl")
 
 using Base.Test
-
+tic()
 @testset "Global tests" begin
 	
 	@testset "Simplexn Examples" begin
@@ -81,7 +81,7 @@ using Base.Test
 		end
 		
 	end
-	
+toc()
 	@testset "Simplexn Tests" begin
 		
 		@testset "2D example" begin
