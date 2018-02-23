@@ -5,7 +5,7 @@
 #####################################################
 
 include("../src/simplexn-serial-e.jl")
-#require("../src/simplexn.jl")
+#include("../src/simplexn.jl")
 
 using Base.Test
 tic()
