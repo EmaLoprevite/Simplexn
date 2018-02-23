@@ -4,7 +4,7 @@
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-include("../src/simplexn.jl")
+include("../src/simplexn-serial-e.jl")
 #require("../src/simplexn.jl")
 
 using Base.Test
