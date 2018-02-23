@@ -8,7 +8,7 @@ include("../src/simplexn.jl")
 #require("../src/simplexn.jl")
 
 using Base.Test
-
+tic()
 @testset "Global tests" begin
 		
 		model = @spawn larExtrude1(([[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2]],[[0,1,3],[1,2,4],[2,4,5],[3,4,6],[4,6,7],[5,7,8]]), repmat([1,2,-3],4))
@@ -81,6 +81,7 @@ using Base.Test
 		end
 		
 	end
+toc()
 	#=
 	@testset "Simplexn Tests" begin
 		
