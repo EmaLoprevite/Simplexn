@@ -4,14 +4,14 @@
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-#include("../src/simplexn-serial-e.jl")			# it works
-include("../src/simplexn.jl")					# it doesn't work
+include("../src/simplexn-serial-e.jl")			# it works
+#include("../src/simplexn.jl")					# it doesn't work
 
 using Base.Test
 
 tic()
 		
-model = @spawn larExtrude1(([[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2]],[[0,1,3],[1,2,4],[2,4,5],[3,4,6],[4,6,7],[5,7,8]]), repmat([1,2,-3],4))
+model = @spawn larExtrude1(([[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2]],[[0,1,3],[1,2,4],[2,4,5],[3,4,6],[4,6,7],[5,7,8]]),repmat([1,2,-3],4))
 		
 model1 = @spawn larExtrude1(VOID,repmat([1],10))
 		
