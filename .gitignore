@@ -6,3 +6,12 @@ deps/deps.jl
 .DS_Store
 butta*
 *checkpoint.ipynb
+
+*.aux
+*.log
+*.out
+*.gz
+*.tex
+*.toc
+
+*.pdf
