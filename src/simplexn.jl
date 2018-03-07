@@ -32,21 +32,19 @@
 		#println("end sync parallel")
 		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))	# PARALLELING?
 	end
-	#@everywhere 
 	#cellGroups = Int64[]
 	#filter!(i->i>0,pattern)
-	p = convert(SharedArray,find(x->x>0,pattern))						# NOT WORKING!?!
+	p = convert(SharedArray,find(x->x>0,pattern))					# NOT WORKING, WHY???
 	cellGroups = SharedArray{Int64}(length(p),size(outcells)[2])
 	@parallel for k in 1:length(p)
 		cellGroups[k,:] = outcells[p[k],:]
 	end
-	
 	#tic()
-	#for k in 1:m
-	#	if pattern[k]>0
-	#		cellGroups = vcat(cellGroups,outcells[k,:])
-	#	end
-	#end
+	for k in 1:m
+		if pattern[k]>0
+			cellGroups = vcat(cellGroups,outcells[k,:])
+		end
+	end
 	#toc()
 	#cellGroups = @parallel (vcat) for k in 1:m
 	#	if pattern[k]>0
