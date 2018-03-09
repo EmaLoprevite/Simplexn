@@ -40,11 +40,11 @@
 		cellGroups[k,:] = outcells[p[k],:]
 	end
 	#tic()
-	for k in 1:m
-		if pattern[k]>0
-			cellGroups = vcat(cellGroups,outcells[k,:])
-		end
-	end
+	#for k in 1:m
+	#	if pattern[k]>0
+	#		cellGroups = vcat(cellGroups,outcells[k,:])
+	#	end
+	#end
 	#toc()
 	#cellGroups = @parallel (vcat) for k in 1:m
 	#	if pattern[k]>0
