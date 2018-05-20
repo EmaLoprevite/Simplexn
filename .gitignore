@@ -11,7 +11,5 @@ butta*
 *.log
 *.out
 *.gz
-*.tex
 *.toc
-
-*.pdf
+*.tex
