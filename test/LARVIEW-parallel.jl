@@ -6,6 +6,8 @@
 
 include("../src/simplexn.jl")
 
+VOID = [Int64[]],[[0]] # the empty simplicial model
+
 using Base.Test
 using LARVIEW
 
