@@ -4,7 +4,7 @@
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-include("../src/simplexn-serial-e.jl")			# it works
+#include("../src/simplexn-serial-e.jl")			# it works
 #include("../src/simplexn.jl")					# it doesn't work
 
 VOID = [Int64[]],[[0]] # the empty simplicial model

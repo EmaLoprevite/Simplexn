@@ -1,6 +1,6 @@
 #####################################################
 ### Project of IN480 - From Python 2.7 to Julia 0.6
-### --- SIMPLEXN - serial porting ---
+### --- SIMPLEXN - serial version ---
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
@@ -42,7 +42,7 @@ function larSimplexGrid1(shape::Array{Int64,1})
 end
 
 # Extraction of non-oriented (d-1)-facets of d-dimensional simplices
-using Combinatorics # for the function combinations()
+using Combinatorics # for combinations() function
 
 function larSimplexFacets(simplices::Array{Array{Int64,1},1})
 	out = Array{Int64,1}[]

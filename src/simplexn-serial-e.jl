@@ -1,18 +1,14 @@
 #####################################################
 ### Project of IN480 - From Python 2.7 to Julia 0.6
-### --- SIMPLEXN - serial porting ---
+### --- SIMPLEXN - serial version (everywhere) ---
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
-
-@everywhere using Combinatorics		# for the function combinations()
-
-@everywhere VOID = V0,CV0 = [Int64[]],[[0]]		# the empty simplicial model
 
 # Generation of the output model vertices in a multiple extrusion of a LAR model
 @everywhere function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
-	coords = cumsum(append!([0],abs.(pattern)))			# built-in function cumsum
+	coords = cumsum(append!([0],abs.(pattern))) # built-in function cumsum
 	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
 	for cell in FV
 		tube = [v + k*offset for k in 0:m for v in cell]
@@ -38,23 +34,23 @@ end
 
 # Generation of simplicial grids of any dimension and shape
 @everywhere function larSimplexGrid1(shape::Array{Int64,1})
-	model = VOID
+	model = [Int64[]],[[0]] # the empty simplicial model
 	for item in shape
 		model = larExtrude1(model,repmat([1],item))
 	end
 	return model
 end
 
-# Extraction of non-oriented (d−1)-facets of d-dimensional simplices
-@everywhere function larSimplexFacets(simplices::Array{Array{Int64,1},1})	# returns array of arrays and not array of tuples
+# Extraction of non-oriented (d-1)-facets of d-dimensional simplices
+@everywhere using Combinatorics # for the function combinations()
+
+@everywhere function larSimplexFacets(simplices::Array{Array{Int64,1},1})
 	out = Array{Int64,1}[]
-    d = length(simplices[1])
-    tic()
-    for simplex in simplices
-    	append!(out,collect(combinations(simplex,d-1)))		# combinations() needs pkg Combinatorics
-    end
-    toc()
-	return sort!(unique(out),lt=lexless)
+	d = length(simplices[1])
+	for simplex in simplices
+		append!(out,collect(combinations(simplex,d-1)))
+	end
+	return sort!(unique(out),lt=lexless) # array of arrays, not of tuples
 end
 #map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])
 
