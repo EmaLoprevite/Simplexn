@@ -5,6 +5,8 @@ In particular, provides the efficient creation of simplicial complexes generated
 
 For more information about the structure of this module see the [Python notebook](notebooks/simplexn-py.ipynb) and the [Julia notebook](notebooks/simplexn-jl.ipynb).
 
+For the full documentation see the [pdf](doc/pdf/report.pdf).
+
 ### Authors
 - [Fabio Fatelli](https://github.com/ffatelli)
 - [Emanuele Loprevite](https://github.com/EmaLoprevite)

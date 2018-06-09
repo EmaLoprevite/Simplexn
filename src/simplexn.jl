@@ -54,10 +54,10 @@ end
 
 @everywhere function larSimplexFacets(simplices::Array{Array{Int64,1},1})
 	out = Array{Int64,1}[]
-    d = length(simplices[1])
-    out = @parallel (append!) for simplex in simplices
-    		collect(combinations(simplex,d-1))
-    	end
+	d = length(simplices[1])
+	out = @parallel (append!) for simplex in simplices
+			collect(combinations(simplex,d-1))
+		end
 	return sort!(unique(out),lt=lexless) # array of arrays, not of tuples
 end
 #map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])
