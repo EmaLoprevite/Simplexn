@@ -19,10 +19,10 @@
 		celltube = @parallel (append!) for k in 1:rangelimit # sync?
 			tube[k:k+d]
 		end
-		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1])) # PARALLELING?
+		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1])) # parallelize?
 	end
 	###filter!(i->i>0,pattern)
-	p = convert(SharedArray,find(x->x>0,pattern))			# DIFFERENT ORDER!!!
+	p = convert(SharedArray,find(x->x>0,pattern))			# WRONG?!
 	cellGroups = SharedArray{Int64}(length(p),size(outcells)[2])
 	@parallel for k in 1:length(p)
 		cellGroups[k,:] = outcells[p[k],:]
@@ -86,8 +86,8 @@ end
 		tverts = [v-tcentroid for v in verts]
 		iterator = collect(zip(tverts, face))
 		rverts = [[atan2(reverse(iterator[i][1])...),iterator[i][2]] for i in 1:length(iterator)]
-		rvertss = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
-		ord = [pair[2] for pair in rvertss]
+		rvertsS = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
+		ord = [pair[2] for pair in rvertsS]
 		append!(ord,ord[1])
 		edges = [[i[2],ord[i[1]+1]] for i in enumerate(ord[1:end-1])]
 		triangles = [prepend!(edge,nverts) for edge in edges]
