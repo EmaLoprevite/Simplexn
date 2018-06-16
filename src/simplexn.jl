@@ -43,7 +43,7 @@ end
 # Generation of simplicial grids of any dimension and shape
 @everywhere function larSimplexGrid1(shape::Array{Int64,1})
 	model = [Int64[]],[[0]] # the empty simplicial model
-	for item in shape # no parallelism
+	for item in shape # no parallel
 		model = larExtrude1(model,repmat([1],item))
 	end
 	return model
