@@ -76,8 +76,8 @@ function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},
 		tverts = [v-tcentroid for v in verts]
 		iterator = collect(zip(tverts, face))
 		rverts = [[atan2(reverse(iterator[i][1])...),iterator[i][2]] for i in 1:length(iterator)]
-		rvertss = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
-		ord = [pair[2] for pair in rvertss]
+		rvertsS = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
+		ord = [pair[2] for pair in rvertsS]
 		append!(ord,ord[1])
 		edges = [[i[2],ord[i[1]+1]] for i in enumerate(ord[1:end-1])]
 		triangles = [prepend!(edge,nverts) for edge in edges]
