@@ -8,11 +8,9 @@
 @everywhere function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
-	#@everywhere m = length(pattern)
 	coords = cumsum(append!([0],abs.(pattern))) # built-in function cumsum
 	outVertices = @spawn [vcat(v,z) for z in coords for v in V]
 	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
-	#offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,0), d*m
 	for cell in FV
 		tube = [v + k*offset for k in 0:m for v in cell]
 		celltube = Int64[]
@@ -21,21 +19,15 @@
 		end
 		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1])) # parallelize?
 	end
-	###filter!(i->i>0,pattern)
-	p = convert(SharedArray,find(x->x>0,pattern))			# WRONG?!
+	p = convert(SharedArray,find(x->x>0,pattern))
 	cellGroups = SharedArray{Int64}(length(p),size(outcells)[2])
-	@parallel for k in 1:length(p)
+	@sync @parallel for k in 1:length(p)
 		cellGroups[k,:] = outcells[p[k],:]
 	end
-	#cellGroups = Int64[]
-	#cellGroups = @parallel (vcat) for k in 1:m
-	#	if pattern[k]>0
-	#		outcells[k,:]
-	#	end
-	#end
+	cellGroupsL = vec(cellGroups')
 	outCellGroups = Array{Int64,1}[]
-	outCellGroups = @parallel (append!) for k in 1:d+1:length(cellGroups)
-			[cellGroups[k:k+d]]
+	outCellGroups = @parallel (append!) for k in 1:d+1:length(cellGroupsL)
+			[cellGroupsL[k:k+d]]
 		end
 	return fetch(outVertices), outCellGroups
 end
