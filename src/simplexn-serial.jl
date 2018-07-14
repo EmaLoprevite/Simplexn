@@ -11,12 +11,12 @@ function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1
 	coords = cumsum(append!([0],abs.(pattern))) # built-in function cumsum
 	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
 	for cell in FV
-		tube = [v + k*offset for k in 0:m for v in cell]
+		tube = [v+k*offset for k in 0:m for v in cell]
 		celltube = Int64[]
 		for k in 1:rangelimit
 			append!(celltube,tube[k:k+d])
 		end
-		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1]))
+		outcells = hcat(outcells,reshape(celltube,d*(d+1),m)')
 	end
 	cellGroups = Int64[]
 	for k in 1:m
@@ -74,7 +74,7 @@ function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},
 		verts = [(V[v+1]'*transf)'[1:end-1] for v in face]
 		tcentroid = sum(verts)/length(verts)
 		tverts = [v-tcentroid for v in verts]
-		iterator = collect(zip(tverts, face))
+		iterator = collect(zip(tverts,face))
 		rverts = [[atan2(reverse(iterator[i][1])...),iterator[i][2]] for i in 1:length(iterator)]
 		rvertsS = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
 		ord = [pair[2] for pair in rvertsS]

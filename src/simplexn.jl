@@ -10,14 +10,14 @@
 	d, m = length(FV[1]), length(pattern)
 	coords = cumsum(append!([0],abs.(pattern))) # built-in function cumsum
 	outVertices = @spawn [vcat(v,z) for z in coords for v in V]
-	offset, outcells, rangelimit = length(V), Array{Int64}(m,0), d*m
-	for cell in FV
-		tube = [v + k*offset for k in 0:m for v in cell]
+	offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,d*(d+1)*length(FV)), d*m
+	@sync @parallel for j in 1:length(FV)
+		tube = [v+k*offset for k in 0:m for v in FV[j]]
 		celltube = Int64[]
-		celltube = @parallel (append!) for k in 1:rangelimit # sync?
+		celltube = @sync @parallel (append!) for k in 1:rangelimit
 			tube[k:k+d]
 		end
-		outcells = hcat(outcells,permutedims(reshape(celltube,d*(d+1),m),[2,1])) # parallelize?
+		outcells[:,(j-1)*d*(d+1)+1:(j-1)*d*(d+1)+d*(d+1)] = reshape(celltube,d*(d+1),m)' # IMPROVE???
 	end
 	p = convert(SharedArray,find(x->x>0,pattern))
 	cellGroups = SharedArray{Int64}(length(p),size(outcells)[2])
@@ -57,11 +57,9 @@ end
 # Transformation to triangles by sorting circularly the vertices of faces
 @everywhere function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})
 	V, FV = model
-	#@everywhere out = Array{Int64,1}[]
 	out = Array{Int64,1}[]
 	nverts = length(V)-1
-	#@parallel
-	for face in FV
+	for face in FV # no parallel
 		arr = [V[v+1] for v in face]
 		centroid = sum(arr)/length(arr)
 		append!(V,[centroid])
@@ -75,14 +73,14 @@ end
 		transf = inv(hcat(v1,v2,v3)')
 		verts = [(V[v+1]'*transf)'[1:end-1] for v in face]
 		tcentroid = sum(verts)/length(verts)
-		tverts = [v-tcentroid for v in verts]
-		iterator = collect(zip(tverts, face))
+		tverts = pmap(x->x-tcentroid,verts)
+		iterator = collect(zip(tverts,face))
 		rverts = [[atan2(reverse(iterator[i][1])...),iterator[i][2]] for i in 1:length(iterator)]
 		rvertsS = sort(rverts,lt=(x,y)->isless(x[1],y[1]))
 		ord = [pair[2] for pair in rvertsS]
 		append!(ord,ord[1])
 		edges = [[i[2],ord[i[1]+1]] for i in enumerate(ord[1:end-1])]
-		triangles = [prepend!(edge,nverts) for edge in edges]
+		triangles = pmap(x->prepend!(x,nverts),edges)
 		append!(out,triangles)
 	end
 	return V, out
