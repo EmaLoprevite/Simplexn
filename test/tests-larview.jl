@@ -12,6 +12,7 @@ catch e
 	answer = 0
 	println("\n$e")
 end
+
 if answer == 1
 	include("../src/simplexn-serial.jl")
 elseif answer == 2

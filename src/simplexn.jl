@@ -8,16 +8,17 @@
 @everywhere function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
+	dd1 = d*(d+1)
 	coords = cumsum(append!([0],abs.(pattern))) # built-in function cumsum
 	outVertices = @spawn [vcat(v,z) for z in coords for v in V]
-	offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,d*(d+1)*length(FV)), d*m
+	offset, outcells, rangelimit = length(V), SharedArray{Int64}(m,dd1*length(FV)), d*m
 	@sync @parallel for j in 1:length(FV)
 		tube = [v+k*offset for k in 0:m for v in FV[j]]
 		celltube = Int64[]
 		celltube = @sync @parallel (append!) for k in 1:rangelimit
 			tube[k:k+d]
 		end
-		outcells[:,(j-1)*d*(d+1)+1:(j-1)*d*(d+1)+d*(d+1)] = reshape(celltube,d*(d+1),m)' # IMPROVE???
+		outcells[:,(j-1)*dd1+1:(j-1)*dd1+dd1] = reshape(celltube,dd1,m)'
 	end
 	p = convert(SharedArray,find(x->x>0,pattern))
 	cellGroups = SharedArray{Int64}(length(p),size(outcells)[2])
@@ -50,9 +51,8 @@ end
 	out = @parallel (append!) for simplex in simplices
 			collect(combinations(simplex,d-1))
 		end
-	return sort!(unique(out),lt=lexless) # array of arrays, not of tuples
+	return sort!(unique(out),lt=lexless)
 end
-#map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])
 
 # Transformation to triangles by sorting circularly the vertices of faces
 @everywhere function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})

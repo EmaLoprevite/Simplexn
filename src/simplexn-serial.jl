@@ -50,9 +50,8 @@ function larSimplexFacets(simplices::Array{Array{Int64,1},1})
 	for simplex in simplices
 		append!(out,collect(combinations(simplex,d-1)))
 	end
-	return sort!(unique(out),lt=lexless) # array of arrays, not of tuples
+	return sort!(unique(out),lt=lexless)
 end
-#map(x->tuple(x...),[[0, 1],[0, 4],[1, 2]])
 
 # Transformation to triangles by sorting circularly the vertices of faces
 function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})
