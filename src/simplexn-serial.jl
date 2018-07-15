@@ -5,7 +5,7 @@
 #####################################################
 
 # Generation of the output model vertices in a multiple extrusion of a LAR model
-function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
+function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}},pattern::Array{Int64,1})
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
 	coords = cumsum(append!([0],abs.(pattern))) # built-in function cumsum

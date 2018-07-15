@@ -42,7 +42,7 @@ end
 	return model
 end
 
-# Extraction of non-oriented (d−1)-facets of d-dimensional simplices
+# Extraction of non-oriented (d-1)-facets of d-dimensional simplices
 @everywhere using Combinatorics # for combinations() function
 
 @everywhere function larSimplexFacets(simplices::Array{Array{Int64,1},1})
