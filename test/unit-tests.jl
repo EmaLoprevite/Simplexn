@@ -21,37 +21,37 @@ VOID = [Int64[]],[[0]] # the empty simplicial model
 		model = larExtrude1(inModel,pattern)
 		println(model)
 		@test length(model[1]) == length(pattern)+1
-		LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
+		#LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
 		
 		pattern = [1,3]
 		model = larExtrude1(inModel,pattern)
 		println(model)
 		@test length(model[1]) == length(pattern)+1
-		LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
+		#LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
 		
 		pattern = [1,3,-2]
 		model = larExtrude1(inModel,pattern)
 		println(model)
 		@test length(model[1]) == length(pattern)+1
-		LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
+		#LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
 		
 		inModel = ([[0,0],[0,1]],[[1,0],[1,1]])
 		pattern = [1]
 		model = larExtrude1(inModel,pattern)
 		println(model)
 		@test length(model[1]) == 4+2*(length(pattern)-1)
-		LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
+		#LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
 		
 		pattern = [1,3]
 		model = larExtrude1(inModel,pattern)
 		println(model)
 		@test length(model[1]) == 4+2*(length(pattern)-1)
-		LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
+		#LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
 		
 		pattern = [1,3,-2]
 		model = larExtrude1(inModel,pattern)
 		println(model)
 		@test length(model[1]) == 4+2*(length(pattern)-1)
-		LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
+		#LARVIEW.viewexploded(hcat(model[1]...),model[2]+1)
 	end
 end
