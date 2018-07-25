@@ -23,9 +23,9 @@ else
 	quit()
 end
 
-VOID = [Int64[]],[[0]] # the empty simplicial model
-
 using Base.Test
+
+VOID = [Int64[]],[[0]] # the empty simplicial model
 
 tic()
 
