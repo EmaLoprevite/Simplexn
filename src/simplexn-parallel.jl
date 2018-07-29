@@ -5,7 +5,7 @@
 #####################################################
 
 # Generation of the output model vertices in a multiple extrusion of a LAR model
-@everywhere function larExtrude1(model::Tuple{Array{Array{Int64,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
+@everywhere function plarExtrude1{T<:Real}(model::Tuple{Array{Array{T,1},1},Array{Array{Int64,1},1}}, pattern::Array{Int64,1})
 	V, FV = model
 	d, m = length(FV[1]), length(pattern)
 	dd1 = d*(d+1)
@@ -34,7 +34,7 @@
 end
 
 # Generation of simplicial grids of any dimension and shape
-@everywhere function larSimplexGrid1(shape::Array{Int64,1})
+@everywhere function plarSimplexGrid1(shape::Array{Int64,1})
 	model = [Int64[]],[[0]] # the empty simplicial model
 	for item in shape # no parallel
 		model = larExtrude1(model,repmat([1],item))
@@ -45,7 +45,7 @@ end
 # Extraction of non-oriented (d-1)-facets of d-dimensional simplices
 @everywhere using Combinatorics # for combinations() function
 
-@everywhere function larSimplexFacets(simplices::Array{Array{Int64,1},1})
+@everywhere function plarSimplexFacets(simplices::Array{Array{Int64,1},1})
 	out = Array{Int64,1}[]
 	d = length(simplices[1])
 	out = @parallel (append!) for simplex in simplices
@@ -55,7 +55,7 @@ end
 end
 
 # Transformation to triangles by sorting circularly the vertices of faces
-@everywhere function quads2tria(model::Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}})
+@everywhere function pquads2tria{T<:Real}(model::Tuple{Array{Array{T,1},1},Array{Array{Int64,1},1}})
 	V, FV = model
 	out = Array{Int64,1}[]
 	nverts = length(V)-1
