@@ -5,13 +5,14 @@
 #####################################################
 
 include("../src/simplexn-serial.jl")
-#include("../src/simplexn.jl")
+include("../src/simplexn-parallel.jl")
 
 VOID = [Int64[]],[[0]] # the empty simplicial model
-N = 4
+N = 7
 
 gr() # loading backend
 
+# Compute the execution mean time
 function timing(f::Function,x,n::Int64)
 	t = Array{Float64}(n)
 	f(x...)
@@ -36,28 +37,40 @@ end
 
 # Create the plots
 function plotting(name::String,timeS::Array{Float64,1},timeP::Array{Float64,1})
-	l = max(length(timeS),length(timeP))+1
+	l = max(length(timeS),length(timeP))+3
 	s, p, xlb, ylb, DPI = "Serial", "Parallel", "Input", "Time (seconds)", 150
-	p1 = plot(timeS,label=s)
-	p2 = plot(timeP,label=p,title=name)
+	p1 = plot(timeS,label=s,title=name)
+	p2 = plot(timeP,label=p)
 	p3 = plot([timeS,timeP],label=[s,p])
-	plot(p1,p2,p3,xlims=(1,l),xlabel=xlb,ylabel=ylb,dpi=1.5*DPI,layout=grid(1,3),size=(999,333),legend=:topleft)
+	plot(p1,p2,p3,xlims=(1,l),xlabel=xlb,ylabel=ylb,dpi=1.5*DPI,legend=:bottomright)
+	pathName = "../doc/tex/figures/"*name
+	savefig(pathName)
 end
 
-timeSer = [timing(larExtrude1,(VOID,repmat([1],100*k)),N) for k in 1:N]
-timePar = [timing(larExtrude1,(VOID,repmat([1],100*k)),N) for k in 1:N]
+
+timeSer = [timing(larExtrude1,[VOID,repmat([1],100*k)],N) for k in 1:N]
+timePar = [timing(plarExtrude1,[VOID,repmat([1],100*k)],N) for k in 1:N]
 plotting("larExtrude1",timeSer,timePar)
 
-#=
-timeSer = [timing(larSimplexGrid1,,n) for k in 1:n]
-timePar = [timing(larSimplexGrid1,,n) for k in 1:n]
+timeSer = [timing(larSimplexGrid1,[[2^k,2^k,2^k]],N) for k in 1:N]
+timePar = [timing(plarSimplexGrid1,[[2^k,2^k,2^k]],N) for k in 1:N]
 plotting("larSimplexGrid1",timeSer,timePar)
 
-timeSer = [timing(larSimplexFacets,,n) for k in 1:n]
-timePar = [timing(larSimplexFacets,,n) for k in 1:n]
+simp = [collect(1:101)]
+sLen = length(simp[1])
+for k in 2:N
+	push!(simp,simp[end]+sLen)
+end
+timeSer = [timing(larSimplexFacets,[simp[1:k]],N) for k in 1:N]
+timePar = [timing(plarSimplexFacets,[simp[1:k]],N) for k in 1:N]
 plotting("larSimplexFacets",timeSer,timePar)
 
-timeSer = [timing(quads2tria,,n) for k in 1:n]
-timePar = [timing(quads2tria,,n) for k in 1:n]
+verts, quads = [[0,0,0],[0,1,0],[1,0,0],[1,1,0]], [[0,1,2,3]]
+len = length(quads[1])
+for k in 2:N
+	append!(verts,verts[end-len+1:end]+1)
+	append!(quads,[quads[end]+len])
+end
+timeSer = [timing(quads2tria,[(verts[1:len*k],quads[1:k])],N) for k in 1:N]
+timePar = [timing(pquads2tria,[(verts[1:len*k],quads[1:k])],N) for k in 1:N]
 plotting("quads2tria",timeSer,timePar)
-=#

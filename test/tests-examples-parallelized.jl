@@ -1,27 +1,10 @@
 #####################################################
 ### Project of IN480 - From Python 2.7 to Julia 0.6
-### --- SIMPLEXN - tests, parallel version ---
+### --- SIMPLEXN - examples, parallel version ---
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
-answer = 0
-println("Do you want to test the serial(1) or the parallel(2) version?")
-try
-	answer = parse(Int8,readline())
-catch e
-	answer = 0
-	println("\n$e")
-end
-
-if answer == 1
-	include("../src/simplexn-serial-e.jl") # it works
-elseif answer == 2
-	include("../src/simplexn.jl") # it doesn't work
-else
-	println("\nWrong selection!")
-	sleep(5)
-	quit()
-end
+include("../src/simplexn-serial-e.jl")
 
 VOID = [Int64[]],[[0]] # the empty simplicial model
 
