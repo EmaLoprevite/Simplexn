@@ -47,7 +47,6 @@ function plotting(name::String,timeS::Array{Float64,1},timeP::Array{Float64,1})
 	savefig(pathName)
 end
 
-
 timeSer = [timing(larExtrude1,[VOID,repmat([1],100*k)],N) for k in 1:N]
 timePar = [timing(plarExtrude1,[VOID,repmat([1],100*k)],N) for k in 1:N]
 plotting("larExtrude1",timeSer,timePar)
@@ -71,6 +70,6 @@ for k in 2:N
 	append!(verts,verts[end-len+1:end]+1)
 	append!(quads,[quads[end]+len])
 end
-timeSer = [timing(quads2tria,[(verts[1:len*k],quads[1:k])],N) for k in 1:N]
-timePar = [timing(pquads2tria,[(verts[1:len*k],quads[1:k])],N) for k in 1:N]
+timeSer = [timing(quads2tria,[(verts[1:len*k],quads[1:k])],N) for k in 1:N] # FAIL!!!
+timePar = [timing(pquads2tria,[(verts[1:len*k],quads[1:k])],N) for k in 1:N] # FAIL!!!
 plotting("quads2tria",timeSer,timePar)
