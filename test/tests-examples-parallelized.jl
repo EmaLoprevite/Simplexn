@@ -1,14 +1,14 @@
 #####################################################
 ### Project of IN480 - From Python 2.7 to Julia 0.6
-### --- SIMPLEXN - examples, parallel version ---
+### --- SIMPLEXN - examples parallelized ---
 ### Authors: Fabio Fatelli, Emanuele Loprevite
 #####################################################
 
 include("../src/simplexn-serial-e.jl")
 
-VOID = [Int64[]],[[0]] # the empty simplicial model
-
 using Base.Test
+
+VOID = [Int64[]],[[0]] # the empty simplicial model
 
 tic()
 		

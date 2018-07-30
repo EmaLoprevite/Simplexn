@@ -8,7 +8,7 @@ include("../src/simplexn-serial.jl")
 include("../src/simplexn-parallel.jl")
 
 VOID = [Int64[]],[[0]] # the empty simplicial model
-N = 7
+N = 3
 
 gr() # loading backend
 
@@ -43,7 +43,7 @@ function plotting(name::String,timeS::Array{Float64,1},timeP::Array{Float64,1})
 	p2 = plot(timeP,label=p)
 	p3 = plot([timeS,timeP],label=[s,p])
 	plot(p1,p2,p3,xlims=(1,l),xlabel=xlb,ylabel=ylb,dpi=1.5*DPI,legend=:bottomright)
-	pathName = "../doc/tex/figures/"*name
+	pathName = "../doc/tex/figures/"*name*"All"
 	savefig(pathName)
 end
 

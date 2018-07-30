@@ -37,7 +37,7 @@ end
 @everywhere function plarSimplexGrid1(shape::Array{Int64,1})
 	model = [Int64[]],[[0]] # the empty simplicial model
 	for item in shape # no parallel
-		model = larExtrude1(model,repmat([1],item))
+		model = plarExtrude1(model,repmat([1],item))
 	end
 	return model
 end
