@@ -134,6 +134,8 @@ using Base.Test
 		@test length(sOut) <= length(s)*length(s[1]) # "<=" because no rep
 	end
 	@testset "quads2tria" begin
+		mOut = quads2tria()
+		@test typeof(mOut) == Tuple{Array{Array{Float64,1},1},Array{Array{Int64,1},1}}
 		
 	end
 end
