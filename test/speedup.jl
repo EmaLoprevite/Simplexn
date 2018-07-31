@@ -7,10 +7,12 @@
 include("../src/simplexn-serial.jl")
 include("../src/simplexn-parallel.jl")
 
-VOID = [Int64[]],[[0]] # the empty simplicial model
-nt, N = 7, 5
+using Plots
 
 gr() # loading backend
+
+VOID = [Int64[]],[[0]] # the empty simplicial model
+nt, N = 7, 5
 
 # Compute the execution mean time
 function timing(f::Function,x,n::Int64)
@@ -46,30 +48,34 @@ function plotting(name::String,timeS::Array{Float64,1},timeP::Array{Float64,1})
 	pathName = "../doc/tex/figures/"*name*"All"
 	savefig(pathName)
 end
-
-timeSer = [timing(larExtrude1,[VOID,repmat([1],100*k)],nt) for k in 1:N]
-timePar = [timing(plarExtrude1,[VOID,repmat([1],100*k)],nt) for k in 1:N]
+#=
+timeSer = [timing(larExtrude1,[VOID,repmat([1,2,3,4,5],k^5)],nt) for k in 1:N]
+timePar = [timing(plarExtrude1,[VOID,repmat([1,2,3,4,5],k^5)],nt) for k in 1:N]
 plotting("larExtrude1",timeSer,timePar)
-
+=#
+#=
 timeSer = [timing(larSimplexGrid1,[[2^k,2^k,2^k]],nt) for k in 1:N]
 timePar = [timing(plarSimplexGrid1,[[2^k,2^k,2^k]],nt) for k in 1:N]
 plotting("larSimplexGrid1",timeSer,timePar)
+=#
 
-simp = [collect(1:101)]
+simp = [collect(1:777)]
 sLen = length(simp[1])
-for k in 2:N
+for k in 2:7*N
 	push!(simp,simp[end]+sLen)
 end
-timeSer = [timing(larSimplexFacets,[simp[1:k]],nt) for k in 1:N]
-timePar = [timing(plarSimplexFacets,[simp[1:k]],nt) for k in 1:N]
+timeSer = [timing(larSimplexFacets,[simp[1:k]],nt) for k in 1:7*N]
+timePar = [timing(plarSimplexFacets,[simp[1:k]],nt) for k in 1:7*N]
 plotting("larSimplexFacets",timeSer,timePar)
 
+#=
 verts, quads = [[0,0,0],[0,1,0],[1,0,0],[1,1,0]], [[0,1,2,3]]
 len = length(quads[1])
-for k in 2:N
+for k in 2:7*N
 	append!(verts,verts[end-len+1:end]+1)
 	append!(quads,[quads[end]+len])
 end
-timeSer = [timing(quads2tria,[(verts[1:len*k],quads[1:k])],nt) for k in 1:N]
-timePar = [timing(pquads2tria,[(verts[1:len*k],quads[1:k])],nt) for k in 1:N]
+timeSer = [timing(quads2tria,[(verts[1:len*k],quads[1:k])],nt) for k in 1:7*N]
+timePar = [timing(pquads2tria,[(verts[1:len*k],quads[1:k])],nt) for k in 1:7*N]
 plotting("quads2tria",timeSer,timePar)
+=#
