@@ -46,7 +46,7 @@ function plotting(name::String,timeS::Array{Float64,1},timeP::Array{Float64,1})
 	pathName = "../doc/tex/figures/"*name*"All"
 	savefig(pathName)
 end
-
+#=
 timeSer = [timing(larExtrude1,[VOID,repmat([1],100*k)],N) for k in 1:N]
 timePar = [timing(plarExtrude1,[VOID,repmat([1],100*k)],N) for k in 1:N]
 plotting("larExtrude1",timeSer,timePar)
@@ -63,7 +63,7 @@ end
 timeSer = [timing(larSimplexFacets,[simp[1:k]],N) for k in 1:N]
 timePar = [timing(plarSimplexFacets,[simp[1:k]],N) for k in 1:N]
 plotting("larSimplexFacets",timeSer,timePar)
-
+=#
 verts, quads = [[0,0,0],[0,1,0],[1,0,0],[1,1,0]], [[0,1,2,3]]
 len = length(quads[1])
 for k in 2:N

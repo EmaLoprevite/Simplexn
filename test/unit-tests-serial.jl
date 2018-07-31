@@ -111,7 +111,7 @@ using Base.Test
 		sOut = larSimplexFacets(s)
 		println(sOut)
 		@test typeof(sOut) == Array{Array{Int64,1},1}
-		@test length(s[1]) == length(sOut[1])+1 # 
+		@test length(s[1]) == length(sOut[1])+1 # dimension
 		# length(s)*binomial(length(s[1]),(length(s[1])-1))
 		@test length(sOut) <= length(s)*length(s[1]) # "<=" because no rep
 		
@@ -120,7 +120,7 @@ using Base.Test
 		sOut = larSimplexFacets(s)
 		println(sOut)
 		@test typeof(sOut) == Array{Array{Int64,1},1}
-		@test length(s[1]) == length(sOut[1])+1 # 
+		@test length(s[1]) == length(sOut[1])+1 # dimension
 		# length(s)*binomial(length(s[1]),(length(s[1])-1))
 		@test length(sOut) <= length(s)*length(s[1]) # "<=" because no rep
 		
@@ -129,10 +129,11 @@ using Base.Test
 		sOut = larSimplexFacets(s)
 		println(sOut)
 		@test typeof(sOut) == Array{Array{Int64,1},1}
-		@test length(s[1]) == length(sOut[1])+1 # 
+		@test length(s[1]) == length(sOut[1])+1 # dimension
 		# length(s)*binomial(length(s[1]),(length(s[1])-1))
 		@test length(sOut) <= length(s)*length(s[1]) # "<=" because no rep
 	end
 	@testset "quads2tria" begin
+		
 	end
 end

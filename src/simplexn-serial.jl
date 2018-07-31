@@ -56,6 +56,9 @@ end
 # Transformation to triangles by sorting circularly the vertices of faces
 function quads2tria{T<:Real}(model::Tuple{Array{Array{T,1},1},Array{Array{Int64,1},1}})
 	V, FV = model
+	if typeof(V) == Array{Array{Int64,1},1}
+		V = convert(Array{Array{Float64,1},1},V)
+	end
 	out = Array{Int64,1}[]
 	nverts = length(V)-1
 	for face in FV
