@@ -19,6 +19,9 @@
 \fvset{tabsize=4,fontsize=\small}							% option for fancyvrb
 \usepackage{upquote}									% fix quotes with verbatim/Verbatim
 %\usepackage{fvextra}
+\usepackage{subfig}										% for the subfloat environment
+\usepackage{caption}									% required by subfig package
+
 
 \pagestyle{fancy}										% document oneside
 \lhead{\nouppercase\leftmark}
@@ -77,8 +80,21 @@ function plotting(name::String,timeS::Array{Float64,1},timeP::Array{Float64,1})
 end
 \end{Verbatim}
 
-\subsection{API} % IMPROVE THIS!!!
-The API describes the serial functions but it is the same for the parallel ones, the only difference is the names beginning with a \texttt{p}.\\
+\subsection{API}
+In Python the dependencies were the following (see figure~\ref{fig:dependenciesGraph}):
+
+\begin{figure}[h]
+\centering
+\subfloat[][\emph{larExtrude1, larSimplexGrid1, and larSimplexFacets}]
+	{\includegraphics[scale=0.245]{figures/Graph1}} \quad
+\subfloat[][\emph{quads2tria}]
+	{\includegraphics[scale=0.245]{figures/Graph2}}
+\caption{Dependencies graph}
+\label{fig:dependenciesGraph}\end{figure}
+
+In the Julia translation all the dependencies have been removed, so now there is only \texttt{larSimplexGrid1} calling \texttt{larExtrude1}; moreover, \texttt{larSimplexFacets} uses the function \texttt{combinations} which is in the built-in package \emph{Combinatorics.jl} .\\
+
+The Julia API describes the serial functions but it is the same for the parallel ones, the only difference is the names beginning with a \texttt{p}.\\
 
 \texttt{larExtrude1\{T<:Real\}(model::Tuple\{Array\{Array\{T,1\},1\},Array\{Array\{Int64,1\},1\}\},\\pattern::Array\{Int64,1\})}
 \\
@@ -87,7 +103,7 @@ The API describes the serial functions but it is the same for the parallel ones,
 \emph{Input}: \texttt{model} contains a pair (V, FV), where V is the array of input vertices, and FV is the array of $d$-cells (given as arrays of vertex indices) providing the input representation of a LAR cellular complex.
 \texttt{pattern} is an array of integers, whose absolute values provide the sizes of the ordered set of 1D (in local coords) subintervals specified by the pattern itself.
 \\
-\emph{Output}: it is a model that contains a pair (outV, triangles) representing the triangulation of the input \texttt{model}.
+\emph{Output}: it is a model representing the extrusion of the input \texttt{model}.
 \\
 
 \texttt{larSimplexGrid1(shape::Array\{Int64,1\})}
@@ -180,9 +196,11 @@ end
 \end{Verbatim}
 
 \subsubsection{Parallel optimization}
-First of all, \texttt{outVertices} is computed as soon as possible with the help of the macro \texttt{@spawn} because it is independent from the rest of the code.
-Every single \texttt{for} loop has been parallelized with \texttt{@parallel}, using also \texttt{@sync} where needed;
-for \texttt{outCellGroups} and \texttt{outcells} % FINISH THIS!!!
+Every single \texttt{for} loop has been parallelized with the \texttt{@parallel} macro, using also \texttt{@sync} where needed.
+
+\texttt{outVertices} is computed as soon as possible with the help of the macro \texttt{@spawn} because it is independent from the rest of the code.
+The \texttt{outcells} array is changed into a \texttt{SharedArray} to be available on all the processors, and the dimension is established a priori to preserve the correct order of the computation and avoid the possible random order due to the \texttt{hcat} in the \texttt{@parallel for}; same as for \texttt{cellGroups}, and in this case a SharedArray \texttt{p} has been used to remove the \texttt{if} inside the loop which would have invalidated the parallelization.
+
 
 \subsubsection{Julia code - parallel}
 \begin{Verbatim}
@@ -345,9 +363,17 @@ timePar = [timing(plarExtrude1,[VOID,repmat([1,2,3,4],k^4)],nt) for k in 1:2*N]
 plotting("larExtrude1",timeSer,timePar)
 \end{Verbatim}
 
-\subsubsection{Examples code}
-\lipsum[6]
+See figure~\ref{fig:larExtrude1}.
 
+\begin{figure}[h]
+\centering
+\subfloat[][\emph{Serial}]
+	{\includegraphics[scale=0.245]{figures/larExtrude1serial}} \quad
+\subfloat[][\emph{Parallel}]
+	{\includegraphics[scale=0.245]{figures/larExtrude1parallel}} \\\subfloat[][\emph{Both}]
+	{\includegraphics[scale=0.245]{figures/larExtrude1both}}
+\caption{larExtrude1}
+\label{fig:larExtrude1}\end{figure}
 
 \subsection{larSimplexGrid1}
 This function generates the simplicial grids of any dimension and shape.
@@ -446,9 +472,6 @@ end
 
 \subsubsection{Speedup script code}
 The code of the two versions is identical so it does not make sense to check the speedup.
-
-\subsubsection{Examples code}
-\lipsum[6]
 
 
 \subsection{larSimplexFacets}
@@ -578,8 +601,17 @@ timePar = [timing(plarSimplexFacets,[simp[1:k]],nt) for k in 1:2*N^2]
 plotting("larSimplexFacets",timeSer,timePar)
 \end{Verbatim}
 
-\subsubsection{Examples code}
-\lipsum[6]
+See figure~\ref{fig:larSimplexFacets}
+
+\begin{figure}[h]
+\centering
+\subfloat[][\emph{Serial}]
+	{\includegraphics[scale=0.245]{figures/larSimplexFacetsserial}} \quad
+\subfloat[][\emph{Parallel}]
+	{\includegraphics[scale=0.245]{figures/larSimplexFacetsparallel}} \\\subfloat[][\emph{Both}]
+	{\includegraphics[scale=0.245]{figures/larSimplexFacetsboth}}
+\caption{larSimplexFacets}
+\label{fig:larSimplexFacets}\end{figure}
 
 
 \subsection{quads2tria}
@@ -658,7 +690,7 @@ end
 \end{Verbatim}
 
 \subsubsection{Parallel optimization}
-The array comprehension was transformed, where possible, into a \texttt{pmap}; unfortunately, it is not possible to parallelize the \texttt{for} with a \texttt{@parallel} because \texttt{append!(V,[centroid])} needs to be computed before the next iteration of the loop.
+The array comprehension was transformed, where possible, into a \texttt{pmap}; it is not possible to parallelize the \texttt{for} with a \texttt{@parallel} because \texttt{append!(V,[centroid])} needs to be computed before the next iteration of the loop.
 
 \subsubsection{Julia code - parallel}
 \begin{Verbatim}
@@ -795,17 +827,43 @@ timePar = [timing(pquads2tria,[(verts[1:len*k],quads[1:k])],nt) for k in 1:2*N^2
 plotting("quads2tria",timeSer,timePar)
 \end{Verbatim}
 
-\subsubsection{Examples code}
-\lipsum[6]
+See figure~\ref{fig:quads2tria}.
+
+\begin{figure}[h]
+\centering
+\subfloat[][\emph{Serial}]
+	{\includegraphics[scale=0.245]{figures/quads2triaserial}} \quad
+\subfloat[][\emph{Parallel}]
+	{\includegraphics[scale=0.245]{figures/quads2triaparallel}} \\\subfloat[][\emph{Both}]
+	{\includegraphics[scale=0.245]{figures/quads2triaboth}}
+\caption{quads2tria}
+\label{fig:quads2tria}\end{figure}
 
 
 % ------- CONCLUSIONS -------
 \section{Conclusions}
-The graphs have showed the parallel code is (significantly) slower than the serial one.
-A possible way to improve this problem could be to rewrite all the functions using different structures and procedures to handle the data, avoiding array of arrays and similar.
+The \texttt{larExtrude1} function was rethought almost from scratch (to avoid the list nesting of Python and to allow the parallelization process) and in fact it is a lot faster with the increasing of the input size.
 
+The other two parallelized functions have showed the parallel code is not faster than the serial one.
+A possible way to address this problem could be to rewrite all the functions using different structures and procedures to handle the data, avoiding array of arrays and similar.
 However, the complete lack of documentation online, official and non, for the correct use of the macros and how they specifically work makes the task quite difficult.
 
+
+% ------- EXAMPLES -------
+\clearpage
+\thispagestyle{plain}
+\appendix
+\section{Examples}
+The translation of the Python examples and tests is not shown in this report because the code is directly compared with the Python output, which is pretty verbose.
+
+However, the links for the code in the GitHub repository are provided \href{https://github.com/EmaLoprevite/Simplexn/blob/master/test/examples-serial.jl}{here}
+and \href{https://github.com/EmaLoprevite/Simplexn/blob/master/test/examples-parallel.jl}{here}, respectively for the serial and the parallel version.
+
+
+% ------- LIST OF FIGURES -------
+\clearpage
+\thispagestyle{plain}
+\listoffigures
 
 % ------- BIBLIOGRAPHY -------
 \clearpage												% clear page for bibliography, if report use cleardoublepage
